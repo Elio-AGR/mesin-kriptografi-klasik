@@ -50,14 +50,6 @@ func main() {
 				kodeOperasi = 'D'
 			}
 
-			// blok buat handle sisa newline
-			for {
-				fmt.Scanf("%c", &kar)
-				if kar == '\n' {
-					break
-				}
-			}
-
 			for {
 				fmt.Print("Masukkan teks: ")
 				teks = ""
@@ -140,14 +132,6 @@ func main() {
 		} else if pilihan == 3 {
 			// brute force 1-25
 			kodeOperasi = 'B'
-
-			// blok buat handle sisa \n
-			for {
-				fmt.Scanf("%c", &kar)
-				if kar == '\n' {
-					break
-				}
-			}
 
 			for {
 				fmt.Print("Masukkan ciphertext: ")
