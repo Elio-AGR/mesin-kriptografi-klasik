@@ -5,10 +5,10 @@ import "fmt"
 func main() {
 	// comment nya dihapus aja kali ya??
 	var teks, hasil, ulang, buang string
-	var pilihan, kunci, i, totalHuruf, shift, k int
+	var pilihan, kunci, i, totalHuruf, shift, k, n, mulai int
 	var rasioEnkripsi float64
 	var kodeOperasi, kar, hasilKar byte
-	var pertahankanSimbol, valid bool
+	var pertahankanSimbol, valid, negatif bool
 
 	ulang = "y"
 
@@ -24,16 +24,25 @@ func main() {
 		// validasi opsi
 		for {
 			fmt.Print("Pilih menu (1-4): ")
-			_, err := fmt.Scan(&pilihan)
-			if err != nil {
-				fmt.Println("[ini ERROR]\nInput harus berupa angka 1-4!")
-				fmt.Scan(&buang)
-				continue
+			buang = ""
+			for {
+				n, _ = fmt.Scanf("%c", &kar)
+				if n == 0 {
+					fmt.Println("\nInput berakhir. Program dihentikan.")
+					return
+				}
+				if kar == '\n' {
+					break
+				}
+				if kar != '\r' {
+					buang = buang + string(kar)
+				}
 			}
-			valid = (pilihan >= 1 && pilihan <= 4)
+			valid = len(buang) == 1 && buang[0] >= '1' && buang[0] <= '4'
 			if !valid {
-				fmt.Println("[ini ERROR]\nPilihan di luar jangkauan! Masukkan 1-4.")
+				fmt.Println("[ini ERROR]\nInput harus berupa angka 1-4!")
 			} else {
+				pilihan = int(buang[0] - '0')
 				break
 			}
 		}
@@ -54,7 +63,11 @@ func main() {
 				fmt.Print("Masukkan teks: ")
 				teks = ""
 				for {
-					fmt.Scanf("%c", &kar)
+					n, _ = fmt.Scanf("%c", &kar)
+					if n == 0 {
+						fmt.Println("\nInput berakhir. Program dihentikan.")
+						return
+					}
 					if kar == '\n' {
 						break
 					}
@@ -72,24 +85,68 @@ func main() {
 			// input kunci
 			for {
 				fmt.Print("Masukkan kunci pergeseran (bilangan bulat, boleh negatif): ")
-				_, err := fmt.Scan(&kunci)
-				if err != nil {
-					fmt.Println("[ini ERROR]\nKunci harus berupa angka bulat!")
-					fmt.Scan(&buang)
-					continue
+				buang = ""
+				for {
+					n, _ = fmt.Scanf("%c", &kar)
+					if n == 0 {
+						fmt.Println("\nInput berakhir. Program dihentikan.")
+						return
+					}
+					if kar == '\n' {
+						break
+					}
+					if kar != '\r' {
+						buang = buang + string(kar)
+					}
 				}
-				break
+				negatif = false
+				mulai = 0
+				if len(buang) > 0 && (buang[0] == '-' || buang[0] == '+') {
+					negatif = buang[0] == '-'
+					mulai = 1
+				}
+				valid = len(buang)-mulai >= 1 && len(buang)-mulai <= 9
+				kunci = 0
+				for i = mulai; i < len(buang) && valid; i++ {
+					if buang[i] >= '0' && buang[i] <= '9' {
+						kunci = kunci*10 + int(buang[i]-'0')
+					} else {
+						valid = false
+					}
+				}
+				if valid {
+					if negatif {
+						kunci = -kunci
+					}
+					break
+				}
+				fmt.Println("[ini ERROR]\nKunci harus berupa angka bulat (maksimal 9 digit)!")
 			}
 
 			for {
 				fmt.Print("Pertahankan simbol & angka? (true/false): ")
-				_, err := fmt.Scan(&pertahankanSimbol)
-				if err != nil {
-					fmt.Println("[ini ERROR]\nInput harus berupa true atau false!")
-					fmt.Scan(&buang)
-					continue
+				buang = ""
+				for {
+					n, _ = fmt.Scanf("%c", &kar)
+					if n == 0 {
+						fmt.Println("\nInput berakhir. Program dihentikan.")
+						return
+					}
+					if kar == '\n' {
+						break
+					}
+					if kar != '\r' {
+						buang = buang + string(kar)
+					}
 				}
-				break
+				if buang == "true" {
+					pertahankanSimbol = true
+					break
+				} else if buang == "false" {
+					pertahankanSimbol = false
+					break
+				}
+				fmt.Println("[ini ERROR]\nInput harus berupa true atau false!")
 			}
 
 			// normalisasi shift
@@ -137,7 +194,11 @@ func main() {
 				fmt.Print("Masukkan ciphertext: ")
 				teks = ""
 				for {
-					fmt.Scanf("%c", &kar)
+					n, _ = fmt.Scanf("%c", &kar)
+					if n == 0 {
+						fmt.Println("\nInput berakhir. Program dihentikan.")
+						return
+					}
 					if kar == '\n' {
 						break
 					}
@@ -173,7 +234,26 @@ func main() {
 			fmt.Println("------------------------------------------")
 		}
 
-		fmt.Print("\nKembali ke menu utama? (y/n): ")
-		fmt.Scan(&ulang)
+		for {
+			fmt.Print("\nKembali ke menu utama? (y/n): ")
+			ulang = ""
+			for {
+				n, _ = fmt.Scanf("%c", &kar)
+				if n == 0 {
+					fmt.Println("\nInput berakhir. Program dihentikan.")
+					return
+				}
+				if kar == '\n' {
+					break
+				}
+				if kar != '\r' {
+					ulang = ulang + string(kar)
+				}
+			}
+			if ulang == "y" || ulang == "Y" || ulang == "n" || ulang == "N" {
+				break
+			}
+			fmt.Println("[ini ERROR]\nInput tidak valid! Masukkan 'y' atau 'n'.")
+		}
 	}
 }
