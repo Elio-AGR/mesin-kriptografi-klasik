@@ -256,4 +256,4 @@ func main() {
 			fmt.Println("[ini ERROR]\nInput tidak valid! Masukkan 'y' atau 'n'.")
 		}
 	}
-
+}
